@@ -8,6 +8,9 @@ in-buffer search experience in Vim.
 - Improved-star motion: hit once to highlight, repeat to jump next
 - Improved visual star-motion: hit once in visual mode to highlight, repeat to
   move to next highlighted term
+- Enhanced `cgn` substitution: highlight only disappears when you move cursor
+  in normal mode, so that you easily see when repeated operations are going to
+  act.
 
 Installation
 ------------
@@ -27,6 +30,7 @@ It provides:
 
 - Search movement by repeating the star key
 - Omits the search text in the status message
+- Highlight doens't disappear when changing text (for `cgn` substitution)
 
 Customization
 -------------

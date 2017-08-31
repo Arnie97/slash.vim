@@ -79,10 +79,22 @@ function! s:immobile(seq)
   return a:seq."\<plug>(slash-prev)"
 endfunction
 
+function! s:disable_highlight()
+  if exists('b:changing_text')
+    unlet! b:changing_text
+    return
+  endif
+
+  set nohlsearch
+  let b:slash_repeated_move = ''
+  autocmd! slash
+endfunction
+
 function! s:trailer()
   augroup slash
     autocmd!
-    autocmd CursorMoved,CursorMovedI * set nohlsearch | let b:slash_repeated_move = '' | autocmd! slash
+    autocmd InsertLeave * let b:changing_text = 1
+    autocmd CursorMoved * call s:disable_highlight()
   augroup END
 
   let seq = foldclosed('.') != -1 ? 'zo' : ''
