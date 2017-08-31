@@ -18,7 +18,7 @@ Installation
 Using [vim-plug](https://github.com/junegunn/vim-plug):
 
 ```vim
-Plug 'junegunn/vim-slash'
+Plug 'thalesmello/vim-slasher'
 ```
 
 Comparison with vim-slash
