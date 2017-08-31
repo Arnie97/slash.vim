@@ -1,11 +1,13 @@
 vim-slash
 =========
 
-vim-slash provides a set of mappings for enhancing in-buffer search experience
-in Vim.
+vim-slasher (fork of [vim-slash][vim-slash]) provides a set of mappings for enhancing
+in-buffer search experience in Vim.
 
 - Automatically clears search highlight when cursor is moved
-- Improved star-search (visual-mode, highlighting without moving)
+- Improved-star motion: hit once to highlight, repeat to jump next
+- Improved visual star-motion: hit once in visual mode to highlight, repeat to
+  move to next highlighted term
 
 Installation
 ------------
@@ -16,20 +18,15 @@ Using [vim-plug](https://github.com/junegunn/vim-plug):
 Plug 'junegunn/vim-slash'
 ```
 
-Comparison with vim-oblique
+Comparison with vim-slash
 ---------------------------
 
-vim-slash is a smaller alternative to [vim-oblique][ob]. vim-oblique depends
-on [a reimplementation of Vim command-line interface][pcl] which is incomplete
-and has a number of issues that cannot be easily fixed. vim-oblique is also
-much slower than the native /-search when working with large files.
+vim-slasher is a fork of [vim-slash][vim-slash] [with additional features rejected by the original author][rejected-features].
 
-Many features of vim-oblique are missing in vim-slash, but [frankly, my dear,
-I don't give a damn][damn].
+It provides:
 
-[ob]:   https://github.com/junegunn/vim-oblique
-[pcl]:  https://github.com/junegunn/vim-pseudocl
-[damn]: https://en.wikipedia.org/wiki/Frankly,_my_dear,_I_don%27t_give_a_damn
+- Search movement by repeating the star key
+- Omits the search text in the status message
 
 Customization
 -------------
@@ -52,3 +49,13 @@ endif
 ```
 
 You can prepend `zz` to the expression: `'zz'.slasher#blink(2, 50)`
+
+Thanks
+------
+
+This plugin is based on the amazing work by [Junegunn](https://github.com/junegunn), which brought us
+[vim-slash][vim-slash], [vim-plug][vim-plug] and the amazing [fzf][fzf].
+
+[vim-slash]: https://github.com/junegunn/vim-slash]
+[rejected-features]: https://github.com/junegunn/vim-slash/pull/9]
+[vim-plug]: https://github.com/junegunn/vim-plug]
