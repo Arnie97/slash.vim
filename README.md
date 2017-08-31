@@ -47,8 +47,8 @@ noremap <plug>(slash-after) zz
 ```vim
 if has('timers')
   " Blink 2 times with 50ms interval
-  noremap <expr> <plug>(slash-after) slash#blink(2, 50)
+  noremap <expr> <plug>(slash-after) slasher#blink(2, 50)
 endif
 ```
 
-You can prepend `zz` to the expression: `'zz'.slash#blink(2, 50)`
+You can prepend `zz` to the expression: `'zz'.slasher#blink(2, 50)`

@@ -111,7 +111,7 @@ function! s:escape(backward)
   return '\V'.substitute(escape(@", '\' . (a:backward ? '?' : '/')), "\n", '\\n', 'g')
 endfunction
 
-function! slash#blink(times, delay)
+function! slasher#blink(times, delay)
   let s:blink = { 'ticks': 2 * a:times, 'delay': a:delay }
 
   function! s:blink.tick(_)
