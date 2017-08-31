@@ -60,6 +60,7 @@ Thanks
 This plugin is based on the amazing work by [Junegunn](https://github.com/junegunn), which brought us
 [vim-slash][vim-slash], [vim-plug][vim-plug] and the amazing [fzf][fzf].
 
-[vim-slash]: https://github.com/junegunn/vim-slash]
-[rejected-features]: https://github.com/junegunn/vim-slash/pull/9]
-[vim-plug]: https://github.com/junegunn/vim-plug]
+[vim-slash]: https://github.com/junegunn/vim-slash
+[rejected-features]: https://github.com/junegunn/vim-slash/pull/
+[vim-plug]: https://github.com/junegunn/vim-plug
+[fzf]: https://github.com/junegunn/fzf
