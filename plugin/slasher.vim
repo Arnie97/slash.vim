@@ -277,7 +277,7 @@ cnoremap        <plug>(slash-cr)      <cr>
 noremap         <plug>(slash-prev)    <c-o>
 inoremap        <plug>(slash-prev)    <nop>
 
-cmap <silent><expr> <cr> slasher#wrap("\<cr>")
+cmap <silent><expr> <cr> slasher#immobile_wrap("\<cr>")
 map  <silent><expr> n    slasher#wrap('n')
 map  <silent><expr> N    slasher#wrap('N')
 map  <silent><expr> gd   slasher#wrap('gd')
