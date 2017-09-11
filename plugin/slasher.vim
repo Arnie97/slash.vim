@@ -184,34 +184,6 @@ function! slasher#print()
   redraw | echo l:msg
 endfunction
 
-function! s:MatchCounts()
-  " both :s and search() modify cursor position
-  let win_view = winsaveview()
-  " folds affect range of ex commands (issue #4)
-  let save_foldenable = &foldenable
-  set nofoldenable
-
-  let in_line = s:MatchInLine()
-
-  let cache_key = [b:changedtick, @/]
-  if exists('b:searchindex_cache_key') && b:searchindex_cache_key ==# cache_key
-    let before = s:MatchesAbove(b:searchindex_cache_val)
-    let total = b:searchindex_cache_val[-1]
-  else
-    let before = (line('.') == 1 ? 0 : s:MatchesInRange('1,-1'))
-    let total = before + s:MatchesInRange(',$')
-  endif
-
-  let b:searchindex_cache_val = [line('.'), before, total]
-  let b:searchindex_cache_key = cache_key
-
-  let &foldenable = save_foldenable
-  call winrestview(win_view)
-
-  return [before + in_line, total]
-endfunction
-
-
 function! s:MatchesInRange(range)
   let gflag = &gdefault ? '' : 'g'
   let output = ''
