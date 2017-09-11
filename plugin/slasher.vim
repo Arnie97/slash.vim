@@ -89,9 +89,10 @@ function! slasher#immobile(seq)
 endfunction
 
 function! slasher#disable_highlight()
+  echo ''
+
   if exists('b:changing_text')
     unlet! b:changing_text
-    echo ''
     return
   endif
 
