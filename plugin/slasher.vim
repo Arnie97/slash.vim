@@ -85,7 +85,6 @@ function! slasher#immobile(seq)
     return slasher#wrap(slasher#star_to_forward_backward(a:seq))
   endif
 
-  let s:winline = winline()
   return slasher#immobile_wrap(slasher#immobile_star(a:seq))
 endfunction
 
@@ -113,15 +112,6 @@ function! slasher#trailer()
   call slasher#create_autocmd()
 
   let seq = foldclosed('.') != -1 ? 'zo' : ''
-  if exists('s:winline')
-    let sdiff = winline() - s:winline
-    unlet s:winline
-    if sdiff > 0
-      let seq .= sdiff."\<c-e>"
-    elseif sdiff < 0
-      let seq .= -sdiff."\<c-y>"
-    endif
-  endif
   let after = len(maparg("<plug>(slash-after)", mode())) ? "\<plug>(slash-after)" : ''
   return seq . after . ":call slasher#print()\<cr>"
 endfunction
