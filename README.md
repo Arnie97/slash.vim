@@ -62,7 +62,7 @@ Thanks
 This plugin is based on the amazing work by [Junegunn Choi](https://github.com/junegunn), which brought us
 [vim-slash][vim-slash], [vim-plug][vim-plug] and the amazing [fzf][fzf].
 
-The indexed search was only possible because of the work of [Hendrik Nyh][hendrik] in [vim-indexed-search][vim-indexed-search].
+The indexed search was only possible because of the work of [Iener Yakov][iener], [Otto Modinos][otto] and [Hendrik Nyh][hendrik] in [vim-indexed-search][vim-indexed-search].
 
 I wanted to combine features of both plugins, plus a few extras, so it motivated me to build this one.
 
@@ -70,6 +70,8 @@ I wanted to combine features of both plugins, plus a few extras, so it motivated
 [rejected-features]: https://github.com/junegunn/vim-slash/pull/
 [vim-plug]: https://github.com/junegunn/vim-plug
 [fzf]: https://github.com/junegunn/fzf
+[otto]: https://github.com/otommod
+[iener]: https://vim.sourceforge.io/account/profile.php?user_id=2342
 [hendrik]: https://github.com/henrik/
 [vim-indexed-search]: https://github.com/henrik/vim-indexed-search
 
