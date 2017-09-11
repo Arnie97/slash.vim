@@ -215,7 +215,7 @@ endfunction
 
 " Efficiently recalculate number of matches above cursor using values cached
 " from the previous run.
-function s:MatchesAbove(cached_values)
+function! s:MatchesAbove(cached_values)
   " avoid wrapping range at the beginning of file
   if line('.') == 1 | return 0 | endif
 
