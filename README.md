@@ -11,6 +11,7 @@ in-buffer search experience in Vim.
 - Enhanced `cgn` substitution: highlight only disappears when you move cursor
   in normal mode, so that you easily see when repeated operations are going to
   act.
+- Indexed search message, borrowed from [vim-indexed-search].
 
 Installation
 ------------
@@ -31,6 +32,7 @@ It provides:
 - Search movement by repeating the star key
 - Omits the search text in the status message
 - Highlight doens't disappear when changing text (for `cgn` substitution)
+- Indexed search message, from [vim-indexed-search].
 
 Customization
 -------------
@@ -57,10 +59,17 @@ You can prepend `zz` to the expression: `'zz'.slasher#blink(2, 50)`
 Thanks
 ------
 
-This plugin is based on the amazing work by [Junegunn](https://github.com/junegunn), which brought us
+This plugin is based on the amazing work by [Junegunn Choi](https://github.com/junegunn), which brought us
 [vim-slash][vim-slash], [vim-plug][vim-plug] and the amazing [fzf][fzf].
+
+The indexed search was only possible because of the work of [Hendrik Nyh][hendrik] in [vim-indexed-search][vim-indexed-search].
+
+I wanted to combine features of both plugins, plus a few extras, so it motivated me to build this one.
 
 [vim-slash]: https://github.com/junegunn/vim-slash
 [rejected-features]: https://github.com/junegunn/vim-slash/pull/
 [vim-plug]: https://github.com/junegunn/vim-plug
 [fzf]: https://github.com/junegunn/fzf
+[hendrik]: https://github.com/henrik/
+[vim-indexed-search]: https://github.com/henrik/vim-indexed-search
+
