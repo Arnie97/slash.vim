@@ -20,30 +20,39 @@
 " OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 " THE SOFTWARE.
 
-function! s:wrap(seq)
+function! slasher#wrap(seq)
   if mode() == 'c' && stridx('/?', getcmdtype()) < 0
     return a:seq
   endif
   silent! autocmd! slash
-  set hlsearch
-  return a:seq."\<plug>(slash-trailer)"
+  return a:seq.":set hlsearch\<CR>\<plug>(slash-trailer)"
 endfunction
 
-function! s:set_repeated_move_type(seq)
-  " Vmaps work by replacing * and # with yank text then search the underlying
-  " word. We have to recognize these modes in order to override * and # keys
-  " in normal mode later, remapping then to n or N as desired.
+function! slasher#immobile_wrap(seq)
+  if mode() == 'c' && stridx('/?', getcmdtype()) < 0
+    return a:seq
+  endif
+  silent! autocmd! slash
+  return a:seq.":set hlsearch\<CR>\<plug>(slash-trailer-without-move)"
+endfunction
 
-  if mode() == 'v' && a:seq[0:1] ==# 'y/'
-    let b:slash_repeated_move = 'visual_forward'
-  elseif mode() == 'v' && a:seq[0:1] ==# 'y?'
-    let b:slash_repeated_move = 'visual_backward'
-  else
+function! slasher#immobile_star(seq)
+  let b:slash_old_register = @s
+  if mode() == 'v' && index(['*', '#'], a:seq) >= 0
+    let b:slash_repeated_move = 'visual'
+    return "\"sy:call setreg('/', slasher#escape(@s))\<CR>:let @s = b:slash_old_register\<CR>"
+  elseif mode() == 'n' && index(['*', '#'], a:seq) >= 0
     let b:slash_repeated_move = 'normal'
+    return ":call setreg('/', '\\<'.expand('<cword>').'\\>')\<CR>"
+  elseif mode() == 'n' && index(['g*', 'g#'], a:seq) >= 0
+    let b:slash_repeated_move = 'normal'
+    return ":call setreg('/', expand('<cword>'))\<CR>"
+  else
+    return ''
   endif
 endfunction
 
-function! s:revert_search_direction(key)
+function! slasher#revert_search_direction(key)
   if a:key ==# 'n'
     return 'N'
   elseif a:key ==# 'N'
@@ -53,7 +62,7 @@ function! s:revert_search_direction(key)
   endif
 endfunction
 
-function! s:star_to_forward_backward(key)
+function! slasher#star_to_forward_backward(key)
   if a:key ==# '*'
     return 'n'
   elseif a:key ==# '#'
@@ -63,23 +72,20 @@ function! s:star_to_forward_backward(key)
   endif
 endfunction
 
-function! s:immobile(seq)
+function! slasher#immobile(seq)
   let repeated_move = get(b:, 'slash_repeated_move', '')
 
   if repeated_move ==# 'normal'
-    return a:seq
-  elseif repeated_move ==# 'visual_forward'
-    return s:star_to_forward_backward(a:seq)
-  elseif repeated_move ==# 'visual_backward'
-    return s:revert_search_direction(s:star_to_forward_backward(a:seq))
+    return slasher#wrap(a:seq)
+  elseif repeated_move ==# 'visual'
+    return slasher#wrap(slasher#star_to_forward_backward(a:seq))
   endif
 
   let s:winline = winline()
-  call s:set_repeated_move_type(a:seq)
-  return a:seq."\<plug>(slash-prev)"
+  return slasher#immobile_wrap(slasher#immobile_star(a:seq))
 endfunction
 
-function! s:disable_highlight()
+function! slasher#disable_highlight()
   if exists('b:changing_text')
     unlet! b:changing_text
     return
@@ -90,12 +96,16 @@ function! s:disable_highlight()
   autocmd! slash
 endfunction
 
-function! s:trailer()
+function! slasher#create_autocmd()
   augroup slash
     autocmd!
     autocmd InsertLeave * let b:changing_text = 1
-    autocmd CursorMoved * call s:disable_highlight()
+    autocmd CursorMoved * call slasher#disable_highlight()
   augroup END
+endfunction
+
+function! slasher#trailer()
+  call slasher#create_autocmd()
 
   let seq = foldclosed('.') != -1 ? 'zo' : ''
   if exists('s:winline')
@@ -111,16 +121,21 @@ function! s:trailer()
   return seq . after
 endfunction
 
-function! s:trailer_on_leave()
+function! slasher#trailer_without_move()
+  call slasher#create_autocmd()
+  return ''
+endfunction
+
+function! slasher#trailer_on_leave()
   augroup slash
     autocmd!
-    autocmd InsertLeave * call <sid>trailer()
+    autocmd InsertLeave * call slasher#trailer()
   augroup END
   return ''
 endfunction
 
-function! s:escape(backward)
-  return '\V'.substitute(escape(@", '\' . (a:backward ? '?' : '/')), "\n", '\\n', 'g')
+function! slasher#escape(contents)
+  return '\V'.substitute(escape(a:contents, '\/'), "\n", '\\n', 'g')
 endfunction
 
 function! slasher#blink(times, delay)
@@ -153,20 +168,21 @@ function! slasher#blink(times, delay)
   return ''
 endfunction
 
-map      <expr> <plug>(slash-trailer) <sid>trailer()
-imap     <expr> <plug>(slash-trailer) <sid>trailer_on_leave()
+map      <expr> <plug>(slash-trailer) slasher#trailer()
+map      <expr> <plug>(slash-trailer-without-move) slasher#trailer_without_move()
+imap     <expr> <plug>(slash-trailer) slasher#trailer_on_leave()
 cnoremap        <plug>(slash-cr)      <cr>
 noremap         <plug>(slash-prev)    <c-o>
 inoremap        <plug>(slash-prev)    <nop>
 
-cmap <silent><expr> <cr> <sid>wrap("\<cr>")
-map  <silent><expr> n    <sid>wrap('n')
-map  <silent><expr> N    <sid>wrap('N')
-map  <silent><expr> gd   <sid>wrap('gd')
-map  <silent><expr> gD   <sid>wrap('gD')
-map  <silent><expr> *    <sid>wrap(<sid>immobile('*'))
-map  <silent><expr> #    <sid>wrap(<sid>immobile('#'))
-map  <silent><expr> g*   <sid>wrap(<sid>immobile('g*'))
-map  <silent><expr> g#   <sid>wrap(<sid>immobile('g#'))
-xmap <silent><expr> *    <sid>wrap(<sid>immobile("y/\<c-r>=<sid>escape(0)\<plug>(slash-cr)\<plug>(slash-cr)"))
-xmap <silent><expr> #    <sid>wrap(<sid>immobile("y?\<c-r>=<sid>escape(1)\<plug>(slash-cr)\<plug>(slash-cr)"))
+cmap <silent><expr> <cr> slasher#wrap("\<cr>")
+map  <silent><expr> n    slasher#wrap('n')
+map  <silent><expr> N    slasher#wrap('N')
+map  <silent><expr> gd   slasher#wrap('gd')
+map  <silent><expr> gD   slasher#wrap('gD')
+map  <silent><expr> *    slasher#immobile('*')
+map  <silent><expr> #    slasher#immobile('#')
+map  <silent><expr> g*   slasher#immobile('g*')
+map  <silent><expr> g#   slasher#immobile('g#')
+xmap <silent><expr> *    slasher#immobile('*')
+xmap <silent><expr> #    slasher#immobile('#')
