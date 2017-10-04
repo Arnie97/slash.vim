@@ -29,7 +29,7 @@ function! slasher#wrap(seq)
     return a:seq
   endif
   silent! autocmd! slash
-  return a:seq.":set hlsearch\<CR>\<plug>(slash-trailer)"
+  return a:seq."\<plug>(slash-trailer)"
 endfunction
 
 function! slasher#immobile_wrap(seq)
@@ -37,7 +37,7 @@ function! slasher#immobile_wrap(seq)
     return a:seq
   endif
   silent! autocmd! slash
-  return a:seq.":set hlsearch\<CR>\<plug>(slash-trailer-without-move)"
+  return a:seq."\<plug>(slash-trailer-without-move)"
 endfunction
 
 function! slasher#immobile_star(seq)
@@ -110,16 +110,18 @@ function! slasher#create_autocmd()
 endfunction
 
 function! slasher#trailer()
+  set hlsearch
   call slasher#create_autocmd()
 
   let seq = foldclosed('.') != -1 ? 'zo' : ''
   let after = len(maparg("<plug>(slash-after)", mode())) ? "\<plug>(slash-after)" : ''
-  return seq . after . ":call slasher#print()\<cr>"
+  return seq . after . "\<plug>(slash-print)"
 endfunction
 
 function! slasher#trailer_without_move()
+  set hlsearch
   call slasher#create_autocmd()
-  return ":call slasher#print()\<cr>"
+  return "\<plug>(slash-print)"
 endfunction
 
 function! slasher#trailer_on_leave()
@@ -183,6 +185,8 @@ function! slasher#print()
   " Flush any delayed screen updates before printing "l:msg".
   " See ":h :echo-redraw".
   redraw | echo l:msg
+
+  return '\<C-L>'
 endfunction
 
 function! s:MatchesInRange(range)
@@ -271,6 +275,7 @@ function! s:MatchCounts()
   return [before + in_line, total]
 endfunction
 
+noremap      <expr> <plug>(slash-print) slasher#print()
 map      <expr> <plug>(slash-trailer) slasher#trailer()
 map      <expr> <plug>(slash-trailer-without-move) slasher#trailer_without_move()
 imap     <expr> <plug>(slash-trailer) slasher#trailer_on_leave()
@@ -281,11 +286,9 @@ inoremap        <plug>(slash-prev)    <nop>
 cmap <silent><expr> <cr> slasher#immobile_wrap("\<cr>")
 map  <silent><expr> n    slasher#wrap('n')
 map  <silent><expr> N    slasher#wrap('N')
-map  <silent><expr> gd   slasher#wrap('gd')
-map  <silent><expr> gD   slasher#wrap('gD')
+nmap  <silent><expr> gd   slasher#wrap('gd')
+nmap  <silent><expr> gD   slasher#wrap('gD')
 map  <silent><expr> *    slasher#immobile('*')
 map  <silent><expr> #    slasher#immobile('#')
-map  <silent><expr> g*   slasher#immobile('g*')
-map  <silent><expr> g#   slasher#immobile('g#')
-xmap <silent><expr> *    slasher#immobile('*')
-xmap <silent><expr> #    slasher#immobile('#')
+nmap  <silent><expr> g*   slasher#immobile('g*')
+nmap  <silent><expr> g#   slasher#immobile('g#')
