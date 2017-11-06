@@ -186,7 +186,7 @@ function! slasher#print()
   " See ":h :echo-redraw".
   redraw | echo l:msg
 
-  return '\<C-L>'
+  return "\<plug>(slash-noop)"
 endfunction
 
 function! s:MatchesInRange(range)
@@ -275,7 +275,8 @@ function! s:MatchCounts()
   return [before + in_line, total]
 endfunction
 
-noremap      <expr> <plug>(slash-print) slasher#print()
+nnoremap <plug>(slash-noop) <esc>
+map      <expr> <plug>(slash-print) slasher#print()
 map      <expr> <plug>(slash-trailer) slasher#trailer()
 map      <expr> <plug>(slash-trailer-without-move) slasher#trailer_without_move()
 imap     <expr> <plug>(slash-trailer) slasher#trailer_on_leave()
