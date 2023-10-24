@@ -25,7 +25,7 @@
 set shm+=s
 
 function! slasher#wrap(seq)
-  if mode() == 'c' && stridx('/?', getcmdtype()) < 0
+  if mode() == 'c'
     return a:seq
   endif
   silent! autocmd! slash
@@ -33,7 +33,7 @@ function! slasher#wrap(seq)
 endfunction
 
 function! slasher#immobile_wrap(seq)
-  if mode() == 'c' && stridx('/?', getcmdtype()) < 0
+  if mode() == 'c'
     return a:seq
   endif
   silent! autocmd! slash
